@@ -1,0 +1,165 @@
+#!/bin/bash
+
+# WARNING Expects gsed to be installed on mashine (gnu-sed)
+# If it isn't and you don't want to install it, delete next line and 
+# one line further down that contains it
+# and take care to correctly  name your components/services yourself
+# (alernatively, try replacing gsed with sed and hold your breath)
+
+if ! command -v gsed &> /dev/null
+then
+	echo "gsed could not be found.\nPlease install gsed."
+	exit
+fi
+
+NAME=$(echo "$2" | gsed -r 's/(^|_|-)([a-z])/\U\2/g')
+SASS_MAIN="sass/main.scss"
+SASS_NAME=$NAME.module.scss
+
+# Expects component templates to be found in a subfolder named "templates"
+get_source_path () {
+	SOURCE="${BASH_SOURCE[0]}"
+	while [ -h "$SOURCE" ]
+	do
+		DIR="$( cd -P "$( dirname "$SOURCE" )" >/dev/null 2>&1 && pwd )"
+		SOURCE="$( readlink "$SOURCE" )"
+		if [[ $SOURCE != /* ]]
+		then
+			SOURCE="$DIR/$SOURCE"
+		fi
+	done
+}
+get_source_path
+TEMPLATES_DIR="${SOURCE%/*}/templates"
+
+
+search_src () {
+# check whether we're inside of a react project
+	local look=${PWD%/}
+	while [[ -n $look ]]; do
+		if [ -d "$look/src" ]; then
+			PROJECT_ROOT="$look/src"
+			return 0
+		else look=${look%/*}
+		fi
+	done
+	echo -e "The command seems to be called outside of a react project.\n(No source folder found)."
+return 1
+}
+
+
+set_kind () {
+	# check that were asked to generate a recognized item
+	if [[ $1 == "component" ]]; then
+		KIND="components"
+		else if [[ $1 == "container" ]]; then
+			KIND="containers"
+			else if [[ $1 == "service" ]]; then
+				KIND="services"
+			else 
+				echo -e "Command $1 not recognized"
+				return 1
+			fi
+		fi
+	fi
+return 0
+}
+
+check_dir () {
+	# check whether dir exists
+	if [ -d "$1" ]
+	then
+		return 0
+	fi
+	return 1
+}
+
+check_file () {
+	# check whether file exists
+	if [ -f "$1" ]
+	then
+		return 0
+	fi
+	return 1
+}
+
+set_dir () {
+	# create directory if necessary 
+	if  ! check_dir "$PROJECT_ROOT/$KIND" 
+	then
+		mkdir "$PROJECT_ROOT/$KIND"
+	fi
+	if  check_dir "$PROJECT_ROOT/$KIND/$NAME" 
+	then
+		echo -e "Component $NAME already exists.\nPlease choose a different name or delete existing component!"
+		return 1
+	else 
+		if [ $KIND != "services" ]
+		then
+			mkdir "$PROJECT_ROOT/$KIND/$NAME"
+			COMPONENT_DIR="$PROJECT_ROOT/$KIND/$NAME"
+		else
+			COMPONENT_DIR="$PROJECT_ROOT/$KIND"
+		fi
+	fi
+}
+
+
+create_files () {
+	if [[ $KIND == "components" || $KIND == "containers" ]] 
+	then
+		create_component_files
+	else
+		if [ $KIND == "services" ]
+		then
+			create_service_files
+		fi
+	fi
+}
+
+create_component_files () {
+	if check_file $SASS_MAIN
+	then
+		echo -e "@import $SASS_MAIN" > $COMPONENT_DIR/$SASS_NAME
+	fi
+	for filename in $TEMPLATES_DIR/*
+	do
+		outputname=$(echo $filename | gsed s/component/$NAME/ | grep -o '[^/]*$')
+		gsed s/MYCOMPONENT/$NAME/g $filename | gsed "s/props/$PROPS/" >> "$COMPONENT_DIR/$outputname"
+	done
+}
+
+create_service_files () {
+	NAME=$(echo $NAME | gsed -r 's/^([A-Z])/\L\1/')
+	if check_file "$COMPONENT_DIR/$NAME.js"
+	then
+		echo -e "Service $NAME already exists.\nPlease choose a different name or delete existing service!"
+		return 1
+	fi
+	touch "$COMPONENT_DIR/$NAME.js"
+}
+
+split_props () {
+	#split optional props input
+	if [[ $# -gt 2 ]]
+	then
+		PROPS="{ "
+		i=3
+		while [ $i -lt "$#" ]
+		do 
+			PROPS="$PROPS${!i}, "
+			i=$[i+1]
+		done
+		PROPS="$PROPS${!i} }"
+	else
+		PROPS="props"
+	fi
+	return 0
+}
+
+# run functions
+search_src &&
+set_kind $1 &&
+set_dir &&
+split_props $@ &&
+create_files
