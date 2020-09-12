@@ -1,5 +1,5 @@
-import React from 'react'
-import styles from './MYCOMPONENT.module.scss'
+import React from 'react';
+import styles from './MYCOMPONENT.module.scss';
 
 function MYCOMPONENT (props) {
   return (
