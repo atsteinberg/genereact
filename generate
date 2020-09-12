@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # WARNING Expects gsed to be installed on mashine (gnu-sed)
-# If it isn't and you don't want to install it, delete next line and 
+# If it isn't and you don't want to install it, delete next line and
 # one line further down that contains it
 # and take care to correctly  name your components/services yourself
 # (alernatively, try replacing gsed with sed and hold your breath)
@@ -56,7 +56,7 @@ set_kind () {
 			KIND="containers"
 			else if [[ $1 == "service" ]]; then
 				KIND="services"
-			else 
+			else
 				echo -e "Command $1 not recognized"
 				return 1
 			fi
@@ -84,16 +84,16 @@ check_file () {
 }
 
 set_dir () {
-	# create directory if necessary 
-	if  ! check_dir "$PROJECT_ROOT/$KIND" 
+	# create directory if necessary
+	if  ! check_dir "$PROJECT_ROOT/$KIND"
 	then
 		mkdir "$PROJECT_ROOT/$KIND"
 	fi
-	if  check_dir "$PROJECT_ROOT/$KIND/$NAME" 
+	if  check_dir "$PROJECT_ROOT/$KIND/$NAME"
 	then
 		echo -e "Component $NAME already exists.\nPlease choose a different name or delete existing component!"
 		return 1
-	else 
+	else
 		if [ $KIND != "services" ]
 		then
 			mkdir "$PROJECT_ROOT/$KIND/$NAME"
@@ -106,7 +106,7 @@ set_dir () {
 
 
 create_files () {
-	if [[ $KIND == "components" || $KIND == "containers" ]] 
+	if [[ $KIND == "components" || $KIND == "containers" ]]
 	then
 		create_component_files
 	else
@@ -118,9 +118,10 @@ create_files () {
 }
 
 create_component_files () {
-	if check_file $SASS_MAIN
+	if check_file "$PROJECT_ROOT"/"$SASS_MAIN"
 	then
-		echo -e "@import $SASS_MAIN" > $COMPONENT_DIR/$SASS_NAME
+		echo -e "@import '"$PROJECT_ROOT"/"$SASS_MAIN"';\n" > $COMPONENT_DIR/$SASS_NAME
+		echo "Main Sass file imported"
 	fi
 	for filename in $TEMPLATES_DIR/*
 	do
@@ -146,7 +147,7 @@ split_props () {
 		PROPS="{ "
 		i=3
 		while [ $i -lt "$#" ]
-		do 
+		do
 			PROPS="$PROPS${!i}, "
 			i=$[i+1]
 		done
@@ -162,4 +163,5 @@ search_src &&
 set_kind $1 &&
 set_dir &&
 split_props $@ &&
-create_files
+create_files &&
+echo "successfully created $NAME"
