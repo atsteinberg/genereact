@@ -3,7 +3,9 @@ import styles from './MYCOMPONENT.module.scss'
 
 function MYCOMPONENT (props) {
   return (
-    <div className={styles.MYCOMPONENT}>MYCOMPONENT works!</div>
+    <div className={styles.MYCOMPONENT}>
+    MYCOMPONENT works!
+    </div>
   );
 }
 

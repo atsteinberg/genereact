@@ -120,7 +120,9 @@ create_files () {
 create_component_files () {
 	if check_file "$PROJECT_ROOT"/"$SASS_MAIN"
 	then
-		echo -e "@import '"$PROJECT_ROOT"/"$SASS_MAIN"';\n" > $COMPONENT_DIR/$SASS_NAME
+		MAIN_PATH="$PROJECT_ROOT"/"${SASS_MAIN%\.*}"
+		echo $MAIN_PATH
+		echo -e "@import '"$MAIN_PATH"';\n" > $COMPONENT_DIR/$SASS_NAME
 		echo "Main Sass file imported"
 	fi
 	for filename in $TEMPLATES_DIR/*
