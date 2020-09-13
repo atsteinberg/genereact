@@ -13,7 +13,7 @@ then
 fi
 
 NAME=$(echo "$2" | gsed -r 's/(^|_|-)([a-z])/\U\2/g')
-SASS_MAIN="sass/main.scss"
+SASS_MAIN="sass/_globals.scss"
 SASS_NAME=$NAME.module.scss
 
 # Expects component templates to be found in a subfolder named "templates"
@@ -120,7 +120,11 @@ create_files () {
 create_component_files () {
 	if check_file "$PROJECT_ROOT"/"$SASS_MAIN"
 	then
-		MAIN_PATH="$PROJECT_ROOT"/"${SASS_MAIN%\.*}"
+		SASS_MAIN_WO="${SASS_MAIN%\.*}"
+		SASS_MAIN_WO_DASH="${SASS_MAIN_WO#*_}"
+		SASS_DIR=${SASS_MAIN%_*}
+		echo $SASS_MAIN_WO_DASH
+		MAIN_PATH="$PROJECT_ROOT"/"$SASS_DIR$SASS_MAIN_WO_DASH"
 		# echo $MAIN_PATH
 		echo -e "@import '"$MAIN_PATH"';\n" > $COMPONENT_DIR/$SASS_NAME
 		# echo "Main Sass file imported"
