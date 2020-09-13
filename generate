@@ -120,18 +120,15 @@ create_files () {
 create_component_files () {
 	if check_file "$PROJECT_ROOT"/"$SASS_MAIN"
 	then
-		SASS_MAIN_WO="${SASS_MAIN%\.*}"
-		SASS_MAIN_WO_DASH="${SASS_MAIN_WO#*_}"
-		SASS_DIR=${SASS_MAIN%_*}
-		echo $SASS_MAIN_WO_DASH
-		MAIN_PATH="$PROJECT_ROOT"/"$SASS_DIR$SASS_MAIN_WO_DASH"
+		SASS_MAIN_WO=$(echo "$SASS_MAIN" | gsed 's/\_//' | gsed 's/\..*//')
+		MAIN_PATH="$PROJECT_ROOT"/"$SASS_MAIN_WO"
 		# echo $MAIN_PATH
 		echo -e "@import '"$MAIN_PATH"';\n" > $COMPONENT_DIR/$SASS_NAME
 		# echo "Main Sass file imported"
 	fi
 	for filename in $TEMPLATES_DIR/*
 	do
-		outputname=$(echo $filename | gsed s/component/$NAME/ | grep -o '[^/]*$')
+		outputname=$(echo "$filename" | gsed s/component/$NAME/ | grep -o '[^/]*$')
 		gsed s/MYCOMPONENT/$NAME/g $filename | gsed "s/props/$PROPS/" >> "$COMPONENT_DIR/$outputname"
 	done
 }
