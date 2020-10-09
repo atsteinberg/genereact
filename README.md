@@ -34,7 +34,7 @@ export PATH="$HOME/bin:$PATH";
 cd ~/bin
 ```
 
-4. create symlink to generate script in ~/bin
+3. create symlink to generate script in ~/bin
 
 ```bash
 ln -s <PATH_TO_GENERATE_SCRIPT> generate
