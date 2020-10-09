@@ -14,6 +14,7 @@ simple shell script to add components, containers or services to your existing c
 2. find your local bin folder, i.e. either:
 
    a. cd ~/bin
+   
    b. if it does not exist:
 
 ```bash
