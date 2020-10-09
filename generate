@@ -168,7 +168,7 @@ split_props () {
 		TYPEDPROPS="$TYPEDPROPS\t$PROP: $TYPE\n}"
 	else
 		PROPS="props"
-		TYPEDPROPS=""
+		TYPEDPROPS="{}"
 
 	fi
 	return 0
