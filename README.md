@@ -44,10 +44,10 @@ ln -s <PATH_TO_GENERATE_SCRIPT> generate
 
 anywhere in your react project (src or below):
 ```bash
-generate component <componentName> [<prop1Name: prop1Type>, ...]
+generate component <componentName> [<prop1Name:prop1Type> <prop2Name:prop2Type> ...]
 ```
 ```bash
-generate container <containerName> [<prop1Name: prop1Type>, ...]
+generate container <containerName> [<prop1Name:prop1Type> ...]
 ```
 ```bash
 generate service <serviceName>
