@@ -10,6 +10,8 @@ simple shell script to add components, containers or services to your existing c
 
 
    * on linux: change all occurrences of "gsed" in generate script to "sed"
+   
+   * on windows: ? pray ?
 
 2. find your local bin folder, i.e. either:
 
