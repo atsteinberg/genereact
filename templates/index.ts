@@ -1,3 +1,3 @@
-import MYCOMPONENT from "./MYCOMPONENT";
+import MYCOMPONENT from './MYCOMPONENT';
 
 export default MYCOMPONENT;
