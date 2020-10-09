@@ -40,3 +40,15 @@ cd ~/bin
 ln -s <PATH_TO_GENERATE_SCRIPT> generate
 ```
 
+## usage
+
+anywhere in your react project (src or below):
+```bash
+generate component <componentName> [<prop1Name: prop1Type>, ...]
+```
+```bash
+generate container <containerName> [<prop1Name: prop1Type>, ...]
+```
+```bash
+generate service <serviceName>
+```
