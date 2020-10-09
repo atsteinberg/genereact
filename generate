@@ -15,6 +15,8 @@ fi
 NAME=$(echo "$2" | gsed -r 's/(^|_|-)([a-z])/\U\2/g')
 SASS_MAIN="sass/_globals.scss"
 SASS_NAME=$NAME.module.scss
+FILE_TYPE="ts"
+
 
 # Expects component templates to be found in a subfolder named "templates"
 get_source_path () {
@@ -129,18 +131,18 @@ create_component_files () {
 	for filename in $TEMPLATES_DIR/*
 	do
 		outputname=$(echo "$filename" | gsed s/component/$NAME/ | grep -o '[^/]*$')
-		gsed s/MYCOMPONENT/$NAME/g $filename | gsed "s/props/$PROPS/" >> "$COMPONENT_DIR/$outputname"
+		gsed s/MYCOMPONENT/$NAME/g $filename | gsed "s/TYPEDPROPS/$TYPEDPROPS/" | gsed "s/PROPS/$PROPS/"  >> "$COMPONENT_DIR/$outputname"
 	done
 }
 
 create_service_files () {
 	NAME=$(echo $NAME | gsed -r 's/^([A-Z])/\L\1/')
-	if check_file "$COMPONENT_DIR/$NAME.js"
+	if check_file "$COMPONENT_DIR/$NAME.$FILE_TYPE"
 	then
 		echo -e "Service $NAME already exists.\nPlease choose a different name or delete existing service!"
 		return 1
 	fi
-	touch "$COMPONENT_DIR/$NAME.js"
+	touch "$COMPONENT_DIR/$NAME.$FILE_TYPE"
 }
 
 split_props () {
@@ -148,15 +150,26 @@ split_props () {
 	if [[ $# -gt 2 ]]
 	then
 		PROPS="{ "
+		TYPEDPROPS="{\n"
 		i=3
 		while [ $i -lt "$#" ]
 		do
-			PROPS="$PROPS${!i}, "
+			ORIGINALPROP=${!i}
+			PROP=${ORIGINALPROP%:*}
+			TYPE=${ORIGINALPROP#*:}
+			PROPS="$PROPS$PROP, "
+			TYPEDPROPS="$TYPEDPROPS$\tPROP: $TYPE;\n"
 			i=$[i+1]
 		done
-		PROPS="$PROPS${!i} }"
+		ORIGINALPROP=${!i}
+		PROP=${ORIGINALPROP%:*}
+		TYPE=${ORIGINALPROP#*:}
+		PROPS="$PROPS$PROP }"
+		TYPEDPROPS="$TYPEDPROPS$\tPROP: $TYPE\n}"
 	else
 		PROPS="props"
+		TYPEDPROPS=""
+
 	fi
 	return 0
 }
