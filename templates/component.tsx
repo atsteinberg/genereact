@@ -1,10 +1,9 @@
 import React from 'react';
 import styles from './MYCOMPONENT.module.scss';
 
-interface MYCOMPONENTProps TYPEDPROPS
+PROPSINTERFACE
 
-
-const MYCOMPONENT: React.FC<MYCOMPONENTProps> = (PROPS: MYCOMPONENTProps) => {
+const MYCOMPONENT: React.FC<PROPSINTERFACEREF> = (PROPS: PROPSINTERFACEREF) => {
   return <div className={styles.MYCOMPONENT}>MYCOMPONENT works!</div>;
 };
 

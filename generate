@@ -131,7 +131,7 @@ create_component_files () {
 	for filename in $TEMPLATES_DIR/*
 	do
 		outputname=$(echo "$filename" | gsed s/component/$NAME/ | grep -o '[^/]*$')
-		gsed s/MYCOMPONENT/$NAME/g $filename | gsed "s/TYPEDPROPS/$TYPEDPROPS/" | gsed "s/PROPS/$PROPS/"  >> "$COMPONENT_DIR/$outputname"
+		gsed "s/PROPSINTERFACEREF/$PROPSINTERFACEREF/g" $filename | gsed "s/PROPSINTERFACE/$INTERFACE/" |  gsed s/MYCOMPONENT/$NAME/g | gsed "s/TYPEDPROPS/$TYPEDPROPS/" | gsed "s/PROPS/$PROPS/"  >> "$COMPONENT_DIR/$outputname"
 	done
 }
 
@@ -166,10 +166,13 @@ split_props () {
 		TYPE=${ORIGINALPROP#*:}
 		PROPS="$PROPS$PROP }"
 		TYPEDPROPS="$TYPEDPROPS\t$PROP: $TYPE\n}"
+		INTERFACE="interface MYCOMPONENTProps TYPEDPROPS"
+		PROPSINTERFACEREF=MYCOMPONENTProps
 	else
 		PROPS="props"
-		TYPEDPROPS="{}"
-
+		TYPEDPROPS="unknown"
+		INTERFACE=""
+		PROPSINTERFACEREF="unknown"
 	fi
 	return 0
 }
