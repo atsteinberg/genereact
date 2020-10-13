@@ -13,7 +13,7 @@ then
 fi
 
 NAME=$(echo "$2" | gsed -r 's/(^|_|-)([a-z])/\U\2/g')
-SASS_MAIN="sass/_globals.scss"
+SASS_MAIN="sass/globals.scss"
 SASS_NAME=$NAME.module.scss
 FILE_TYPE="ts"
 
@@ -165,8 +165,8 @@ split_props () {
 		PROP=${ORIGINALPROP%:*}
 		TYPE=${ORIGINALPROP#*:}
 		PROPS="$PROPS$PROP }"
-		TYPEDPROPS="$TYPEDPROPS\t$PROP: $TYPE\n}"
-		INTERFACE="interface MYCOMPONENTProps TYPEDPROPS"
+		TYPEDPROPS="$TYPEDPROPS  $PROP: $TYPE;\n}"
+		INTERFACE="\ninterface MYCOMPONENTProps TYPEDPROPS\n"
 		PROPSINTERFACEREF=MYCOMPONENTProps
 	else
 		PROPS="props"
