@@ -5,6 +5,6 @@ import MYCOMPONENT from './MYCOMPONENT';
 describe('MYCOMPONENT', () => {
   it('renders MYCOMPONENT', () => {
     render(<MYCOMPONENT />);
-    expect(screen.getByText('MYCOMPONENT works!')).not.toBe(null);
-  })
-})
+    expect(screen.getByText('')).not.toBe(null);
+  });
+});
