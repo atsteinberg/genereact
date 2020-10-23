@@ -42,7 +42,7 @@ cd ~/bin
 ln -s <PATH_TO_GENERATE_SCRIPT> generate
 ```
 
-## usage
+## Usage
 
 anywhere in your react project (src or below):
 ```bash
