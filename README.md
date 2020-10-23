@@ -2,7 +2,7 @@
 
 simple shell script to add components, containers or services to your existing create react app, using typescript and sass css modules
 
-## install
+## Getting started
 
 1. 
 
@@ -54,3 +54,5 @@ generate container <containerName> [<prop1Name:prop1Type> ...]
 ```bash
 generate service <serviceName>
 ```
+## Developer
+- Alex Steinberg: [github](https://github.com/atsteinberg) – [linkedin](https://www.linkedin.com/in/alexander-steinberg-7b7299194) – [web](atsteinberg.github.io)
